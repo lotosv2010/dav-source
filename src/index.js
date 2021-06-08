@@ -1,17 +1,18 @@
 import dva from 'dva';
 import './index.css';
 
-// 1. Initialize
+// todo: 1. Initialize
 const app = dva();
 
-// 2. Plugins
+// todo: 2. Plugins
 // app.use({});
 
-// 3. Model
-// app.model(require('./models/counter').default);
+// todo:  3. Model，注册模型 
+app.model(require('./models/counter').default);
+app.model(require('./models/user').default);
 
-// 4. Router
+// todo: 4. Router
 app.router(require('./router').default);
 
-// 5. Start
+// todo: 5. Start
 app.start('#root');
