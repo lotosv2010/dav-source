@@ -1,8 +1,11 @@
 import dva from 'dva';
 import './index.css';
+import createLogger from 'redux-logger';
 
 // todo: 1. Initialize
-const app = dva();
+const app = dva({
+  onAction: createLogger
+});
 
 // todo: 2. Plugins
 // app.use({});
