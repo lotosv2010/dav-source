@@ -1,4 +1,4 @@
-import dva from 'dva';
+import dva from './lib/dva';
 import './index.css';
 import createLogger from 'redux-logger';
 

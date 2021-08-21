@@ -1,10 +1,9 @@
 import React from 'react';
-import { connect } from 'dva';
+import { connect } from '../lib/dva';
 import styles from './IndexPage.css';
 
 function IndexPage(props) {
   const {counter: {number}, dispatch} = props
-  console.log(props)
   return (
     <div className={styles.normal}>
       <h1 className={styles.title}>Counter</h1>
