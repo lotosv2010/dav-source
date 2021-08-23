@@ -5,13 +5,14 @@ import {createStore, combineReducers, applyMiddleware} from 'redux';
 import {Provider, connect} from 'react-redux';
 import prefixNamespace from '../dva-core/prefixNamespace';
 import createSagaMiddleware from 'redux-saga';
-import {getSagas} from '../dva-core/getSaga'
+import {getSagas} from '../dva-core/getSaga';
+import {routerMiddleware, connectRouter, ConnectedRouter} from 'connected-react-router';
 
 export {
   connect
 }
 export default function dva(opts={}) {
-  const history = opts.history || createHashHistory;
+  const history = opts.history || createHashHistory();
 
   function model(m) {
     const prefixedModel = prefixNamespace(m);
@@ -26,19 +27,23 @@ export default function dva(opts={}) {
     const sages = getSagas(app);
     // app._store = createStore(reducers);
     const sagaMiddleware = createSagaMiddleware();
-    app._store = applyMiddleware(sagaMiddleware)(createStore)(reducers);
+    app._store = applyMiddleware(routerMiddleware(history), sagaMiddleware)(createStore)(reducers);
 
     sages.forEach(sagaMiddleware.run); // 启动saga执行
 
     ReactDOM.render(
       <Provider store={app._store}>
-        {app._router({history: history()})}
+        <ConnectedRouter history={history}>
+          {app._router({history, app})}
+        </ConnectedRouter>
       </Provider>,
       document.querySelector(container));
   }
 
   function createReducer(app) {
-    const reducers = {}; // 此对象将会用来合并，会传给 combineReducers
+    const reducers = {
+      router: connectRouter(app._history)
+    }; // 此对象将会用来合并，会传给 combineReducers
     for (const model of app._models) {
       reducers[model.namespace] = function(state=model.state, action) {
         const model_reducers = model.reducers;
@@ -53,6 +58,7 @@ export default function dva(opts={}) {
   }
 
   const app = {
+    _history: history,
     _models: [],
     model,
     _router: null,

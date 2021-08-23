@@ -1,9 +1,9 @@
 import React from 'react';
-import { Router, Route, Switch, Link } from 'dva/router';
+import { Router, Route, Switch, Link } from './lib/dva/router';
 import IndexPage from './routes/IndexPage';
 import UserPage from './routes/UserPage'
 
-function RouterConfig({ history }) {
+function RouterConfig({ history, app }) {
   return (
     <Router history={history}>
       <>

@@ -1,6 +1,7 @@
 import React from 'react';
 import { connect } from '../lib/dva';
 import styles from './IndexPage.css';
+import {routerRedux} from '../lib/dva/router';
 
 function IndexPage(props) {
   const {counter: {number}, dispatch} = props
@@ -12,6 +13,7 @@ function IndexPage(props) {
       <p><button onClick={() => dispatch({type: 'counter/minus'})}>-</button></p>
       <p><button onClick={() => dispatch({type: 'counter/asyncAdd'})}>+(async)</button></p>
       <p><button onClick={() => dispatch({type: 'counter/asyncMinus'})}>-(async)</button></p>
+      <p><button onClick={() => dispatch(routerRedux.push('/user'))}>goto user</button></p>
     </div>
   );
 }

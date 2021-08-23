@@ -1,5 +1,5 @@
 import React from 'react'
-import { connect } from 'dva'
+import { connect } from '../lib/dva'
 
 export const User = (props) => {
   console.log(props)
