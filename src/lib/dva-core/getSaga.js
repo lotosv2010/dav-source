@@ -1,0 +1,30 @@
+import * as sagaEffects from 'redux-saga/effects';
+import {prefixType} from './prefixType';
+
+export function getSagas(app) {
+  const sages = []
+  for (const model of app._models) {
+    // 把 effects对象变成一个saga
+    sages.push(function *() {
+      for (const key in model.effects) {
+        const watcher = getWatcher(key, model.effects[key], model);
+        // 为什么要调用fork，因为fork可单独开一个进程执行，而不阻塞当前sage执行
+        yield sagaEffects.fork(watcher);
+      }
+    })
+  }
+  return sages;
+}
+
+function getWatcher(key, effect, model) {
+  function put(action) {
+    const {type} = action;
+    return sagaEffects.put({...action, type: prefixType(type, model)})
+  }
+
+  return function * () {
+    yield sagaEffects.takeEvery(key, function * (...args) {
+      yield effect(...args, { ...sagaEffects, put});
+    });
+  }
+}

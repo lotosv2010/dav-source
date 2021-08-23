@@ -1,9 +1,11 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import {createHashHistory} from 'history';
-import {createStore, combineReducers} from 'redux';
+import {createStore, combineReducers, applyMiddleware} from 'redux';
 import {Provider, connect} from 'react-redux';
-import prefixNamespace from './prefixNamespace';
+import prefixNamespace from '../dva-core/prefixNamespace';
+import createSagaMiddleware from 'redux-saga';
+import {getSagas} from '../dva-core/getSaga'
 
 export {
   connect
@@ -21,7 +23,12 @@ export default function dva(opts={}) {
   }
   function start(container) {
     const reducers = createReducer(app);
-    app._store = createStore(reducers);
+    const sages = getSagas(app);
+    // app._store = createStore(reducers);
+    const sagaMiddleware = createSagaMiddleware();
+    app._store = applyMiddleware(sagaMiddleware)(createStore)(reducers);
+
+    sages.forEach(sagaMiddleware.run); // 启动saga执行
 
     ReactDOM.render(
       <Provider store={app._store}>

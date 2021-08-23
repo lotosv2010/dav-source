@@ -26,6 +26,7 @@ export default {
     }
   },
   effects: {
+    // 监听counter/asyncAdd的动作，监听到了之后执行这个saga， takeEvery('counter/asyncAdd', *asyncAdd(action, effects){})
     *asyncAdd({ payload }, { call, put }) {  // eslint-disable-line
       yield call(delay, 1000)
       yield put({ type: 'add' });
