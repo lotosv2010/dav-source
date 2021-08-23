@@ -14,6 +14,7 @@ function IndexPage(props) {
       <p><button onClick={() => dispatch({type: 'counter/asyncAdd'})}>+(async)</button></p>
       <p><button onClick={() => dispatch({type: 'counter/asyncMinus'})}>-(async)</button></p>
       <p><button onClick={() => dispatch(routerRedux.push('/user'))}>goto user</button></p>
+      <p><button onClick={() => dispatch({type: 'counter/@@CANCEL_EFFECTS'})}>取消effect</button></p>
     </div>
   );
 }

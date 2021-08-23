@@ -9,7 +9,11 @@ export function getSagas(app) {
       for (const key in model.effects) {
         const watcher = getWatcher(key, model.effects[key], model);
         // 为什么要调用fork，因为fork可单独开一个进程执行，而不阻塞当前sage执行
-        yield sagaEffects.fork(watcher);
+        const task = yield sagaEffects.fork(watcher);
+        yield sagaEffects.fork(function*() {
+          yield sagaEffects.take(`${model.namespace}/@@CANCEL_EFFECTS`);
+          yield sagaEffects.cancel(task);
+        });
       }
     })
   }

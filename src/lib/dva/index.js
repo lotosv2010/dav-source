@@ -7,6 +7,7 @@ import prefixNamespace from '../dva-core/prefixNamespace';
 import createSagaMiddleware from 'redux-saga';
 import {getSagas} from '../dva-core/getSaga';
 import {routerMiddleware, connectRouter, ConnectedRouter} from 'connected-react-router';
+import {run} from '../dva-core/subscription';
 
 export {
   connect
@@ -25,9 +26,11 @@ export default function dva(opts={}) {
   function start(container) {
     const reducers = createReducer(app);
     const sages = getSagas(app);
-    // app._store = createStore(reducers);
+  
     const sagaMiddleware = createSagaMiddleware();
     app._store = applyMiddleware(routerMiddleware(history), sagaMiddleware)(createStore)(reducers);
+
+    run(app);
 
     sages.forEach(sagaMiddleware.run); // 启动saga执行
 
