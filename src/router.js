@@ -1,10 +1,16 @@
 import React from 'react';
 import { Route, Switch, Link, routerRedux } from './lib/dva/router';
 import IndexPage from './routes/IndexPage';
-import UserPage from './routes/UserPage'
+import dynamic from './lib/dva/dynamic';
+
 const {ConnectedRouter} = routerRedux;
 
 function RouterConfig({ history, app }) {
+  const UsersPage = dynamic({
+    app,
+    models: () => [import(/* webpackChunkName: "users" */'./models/user')],
+    component: () => import(/* webpackChunkName: "users" */'./routes/UserPage')
+  });
   return (
     <ConnectedRouter history={history}>
       <>
@@ -14,7 +20,7 @@ function RouterConfig({ history, app }) {
         </p>
         <Switch>
           <Route path="/" exact component={IndexPage} />
-          <Route path="/user" component={UserPage} />
+          <Route path="/user" component={UsersPage} />
         </Switch>
       </>
     </ConnectedRouter>

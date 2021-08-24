@@ -7,8 +7,9 @@ import prefixNamespace from '../dva-core/prefixNamespace';
 import createSagaMiddleware from 'redux-saga';
 import {getSagas} from '../dva-core/getSaga';
 import { routerRedux } from './router';
-import {run} from '../dva-core/subscription';
+import {run, runSubscription} from '../dva-core/subscription';
 import Plugin, {filterHooks} from '../dva-core/plugin';
+import {getSaga} from '../dva-core/getSaga'
 
 const  {routerMiddleware, connectRouter} = routerRedux;
 export {
@@ -68,6 +69,20 @@ export default function dva(opts={}) {
         ...initialReducers,
         ...extraReducers
       })
+    }
+
+    // 对当前的应用插入一个模型，需要处理 state reducers subscriptions effects
+    app.model = injectModel.bind(app);
+    function injectModel(m) {
+      m = model(m); // 给 reducers effects 加命名空间前缀
+      initialReducers[m.namespace] = getReducer(m);
+      app._store.replaceReducer(createReducer()); // 新的reducer替换新的reducer
+      if(m.effects) {
+        sagaMiddleware.run(getSaga(m.effects, m, plugin.get('onEffect')));
+      }
+      if(m.subscriptions) {
+        runSubscription(m.subscriptions, app)
+      }
     }
   }
 

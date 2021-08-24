@@ -16,7 +16,7 @@ app.use(createLoading());
 
 // todo:  3. Model，注册模型 
 app.model(require('./models/counter').default);
-app.model(require('./models/user').default);
+// app.model(require('./models/user').default);
 
 // todo: 4. Router
 app.router(require('./router').default);

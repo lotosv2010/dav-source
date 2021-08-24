@@ -1,21 +1,25 @@
 import * as sagaEffects from 'redux-saga/effects';
 import {prefixType} from './prefixType';
 
+export function getSaga(effects, model, onEffect) {
+  return function *() {
+    for (const key in effects) {
+      const watcher = getWatcher(key, model.effects[key], model, onEffect );
+      // 为什么要调用fork，因为fork可单独开一个进程执行，而不阻塞当前sage执行
+      const task = yield sagaEffects.fork(watcher);
+      yield sagaEffects.fork(function*() {
+        yield sagaEffects.take(`${model.namespace}/@@CANCEL_EFFECTS`);
+        yield sagaEffects.cancel(task);
+      });
+    }
+  }
+}
+
 export function getSagas(app, plugin) {
   const sages = []
   for (const model of app._models) {
     // 把 effects对象变成一个saga
-    sages.push(function *() {
-      for (const key in model.effects) {
-        const watcher = getWatcher(key, model.effects[key], model, plugin.get('onEffect'));
-        // 为什么要调用fork，因为fork可单独开一个进程执行，而不阻塞当前sage执行
-        const task = yield sagaEffects.fork(watcher);
-        yield sagaEffects.fork(function*() {
-          yield sagaEffects.take(`${model.namespace}/@@CANCEL_EFFECTS`);
-          yield sagaEffects.cancel(task);
-        });
-      }
-    })
+    sages.push(getSaga(model.effects, model, plugin.get('onEffect')))
   }
   return sages;
 }
