@@ -1,6 +1,7 @@
 const hooks = [
   'onEffect', // 增强effect
-  'extraReducers' // 添加额外的reducer
+  'extraReducers', // 添加额外的reducer
+  'onAction'
 ]
 
 export default class Plugin {

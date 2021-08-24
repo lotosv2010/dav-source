@@ -51,7 +51,8 @@ export default function dva(opts={}) {
     const sages = getSagas(app, plugin);
   
     const sagaMiddleware = createSagaMiddleware();
-    app._store = applyMiddleware(routerMiddleware(history), sagaMiddleware)(createStore)(rootReducer);
+    const extraMiddleware = plugin.get('onAction');
+    app._store = applyMiddleware(routerMiddleware(history), sagaMiddleware, ...extraMiddleware)(createStore)(rootReducer);
 
     run(app);
 
