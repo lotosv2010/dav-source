@@ -1,6 +1,6 @@
 import dva from './lib/dva';
 import './index.css';
-import createLogger from 'redux-logger';
+import createLogger from './lib/redux-logger';
 import {createBrowserHistory} from 'history';
 import createLoading from './lib/dva-loading';
 
