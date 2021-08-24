@@ -2,12 +2,14 @@ import dva from './lib/dva';
 import './index.css';
 import createLogger from 'redux-logger';
 import {createBrowserHistory} from 'history';
+import createLoading from './lib/dva-loading';
 
 // todo: 1. Initialize
 const app = dva({
   onAction: createLogger,
   history: createBrowserHistory()
 });
+app.use(createLoading());
 
 // todo: 2. Plugins
 // app.use({});
