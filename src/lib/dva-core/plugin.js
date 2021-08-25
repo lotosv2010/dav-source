@@ -2,7 +2,8 @@ const hooks = [
   'onEffect', // 增强effect
   'extraReducers', // 添加额外的reducer
   'onAction',
-  'onStateChange'
+  'onStateChange',
+  'onReducer'
 ]
 
 export default class Plugin {
@@ -22,8 +23,13 @@ export default class Plugin {
   }
   get(key) {
     const {hooks} = this;
-    if(key === 'extraReducers') return getExtractReducers(hooks[key]); // hooks[key] => 数组 [{key1: reducer1, key2: reducer2}]
-    return hooks[key];
+    if(key === 'extraReducers') {
+      return getExtractReducers(hooks[key]); // hooks[key] => 数组 [{key1: reducer1, key2: reducer2}]
+    } else if(key ==='onReducer') {
+      return getOnReducer(hooks[key]);
+    } else {
+      return hooks[key];
+    }
   }
 }
 
@@ -45,4 +51,13 @@ export function filterHooks(options) {
     }
     return memo;
   }, {})
+}
+
+function getOnReducer(hook) {
+  return function(reducer) {
+    for (const reduceEnhancer of hook) {
+      reducer = reduceEnhancer(reducer)
+    }
+    return reducer;
+  }
 }

@@ -15,7 +15,7 @@ export const User = (props) => {
 }
 
 const mapStateToProps = (state) => ({
-  ...state
+  ...state.present
 })
 
 export default connect(mapStateToProps)(User)

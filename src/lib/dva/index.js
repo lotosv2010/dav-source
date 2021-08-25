@@ -70,11 +70,12 @@ export default function dva(opts={}) {
       document.querySelector(container));
 
     function createReducer() {
+      const reduceEnhancer = plugin.get('onReducer')
       const extraReducers = plugin.get('extraReducers');
-      return combineReducers({
+      return reduceEnhancer(combineReducers({
         ...initialReducers,
         ...extraReducers
-      })
+      }))
     }
 
     // 对当前的应用插入一个模型，需要处理 state reducers subscriptions effects
