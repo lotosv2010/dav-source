@@ -7,9 +7,15 @@ import createLoading from './lib/dva-loading';
 // todo: 1. Initialize
 const app = dva({
   onAction: createLogger,
-  history: createBrowserHistory()
+  history: createBrowserHistory(),
+  initialState: localStorage.getItem('state')?JSON.parse(localStorage.getItem('state')):undefined
 });
 app.use(createLoading());
+app.use({
+  onStateChange(state) {
+    localStorage.setItem('state', JSON.stringify(state));
+  }
+})
 
 // todo: 2. Plugins
 // app.use({});

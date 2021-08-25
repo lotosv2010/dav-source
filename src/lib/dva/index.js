@@ -52,8 +52,13 @@ export default function dva(opts={}) {
   
     const sagaMiddleware = createSagaMiddleware();
     const extraMiddleware = plugin.get('onAction');
-    app._store = applyMiddleware(routerMiddleware(history), sagaMiddleware, ...extraMiddleware)(createStore)(rootReducer);
-
+    app._store = applyMiddleware(routerMiddleware(history), sagaMiddleware, ...extraMiddleware)(createStore)(rootReducer, opts.initialState);
+    
+    // todo:stateChange
+    const onStateChange = plugin.get('onStateChange');
+    app._store.subscribe(() => {
+      onStateChange.forEach(listener => listener(app._store.getState()));
+    });
     run(app);
 
     sages.forEach(sagaMiddleware.run); // 启动saga执行
@@ -77,6 +82,7 @@ export default function dva(opts={}) {
     function injectModel(m) {
       m = model(m); // 给 reducers effects 加命名空间前缀
       initialReducers[m.namespace] = getReducer(m);
+      // todo：replaceReducer 会默认派发动作，会让 reducer 执行
       app._store.replaceReducer(createReducer()); // 新的reducer替换新的reducer
       if(m.effects) {
         sagaMiddleware.run(getSaga(m.effects, m, plugin.get('onEffect')));
