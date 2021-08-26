@@ -31,3 +31,5 @@
 ## onReducer 实现
 
 ## redux-undo 实现
+
+## redux-persist 实现
