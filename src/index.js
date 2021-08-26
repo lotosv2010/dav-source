@@ -4,7 +4,7 @@ import createLogger from './lib/redux-logger';
 import {createBrowserHistory} from 'history';
 import createLoading from './lib/dva-loading';
 import undoable from './lib/redux-undo';
-import {persistReducer} from './lib/redux-persist';
+import {persistReducer, persistStore} from './lib/redux-persist';
 import storage from './lib/redux-persist/lib/storage';
 
 const persistConfig = {
@@ -24,7 +24,16 @@ const app = dva({
       const newState = rootReducer(state, action);
       return {...newState, router: newState.present && newState.present.router || {}}
     }
-  }
+  },
+  // 跟别的hook不一样，只能写一个，写多个后面的会覆盖前面的
+  extraEnhancers: [
+    createStore => (...args) => {
+      const store = createStore(...args);
+      const persistor = persistStore(store);
+      store.persistor = persistor;
+      return store;
+    }
+  ]
 });
 
 // todo: 2. Plugins

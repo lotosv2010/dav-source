@@ -3,7 +3,8 @@ const hooks = [
   'extraReducers', // 添加额外的reducer
   'onAction',
   'onStateChange',
-  'onReducer'
+  'onReducer',
+  'extraEnhancers'
 ]
 
 export default class Plugin {
@@ -18,7 +19,11 @@ export default class Plugin {
   use(plugin) {
     const {hooks} = this;
     for (const key in plugin) {
-      hooks[key].push(plugin[key]);
+      if (key === 'extraEnhancers') {
+        hooks[key] = plugin[key];
+      } else {
+        hooks[key].push(plugin[key]);
+      }
     }
   }
   get(key) {

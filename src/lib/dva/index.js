@@ -1,7 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import {createHashHistory} from 'history';
-import {createStore, combineReducers, applyMiddleware} from 'redux';
+import {createStore, combineReducers, applyMiddleware, compose} from 'redux';
 import {Provider, connect} from 'react-redux';
 import prefixNamespace from '../dva-core/prefixNamespace';
 import createSagaMiddleware from 'redux-saga';
@@ -52,8 +52,14 @@ export default function dva(opts={}) {
   
     const sagaMiddleware = createSagaMiddleware();
     const extraMiddleware = plugin.get('onAction');
-    app._store = applyMiddleware(routerMiddleware(history), sagaMiddleware, ...extraMiddleware)(createStore)(rootReducer, opts.initialState);
-    
+
+    // todo: extraEnhancers
+    // applyMiddleware 返回是一个enhancer，增加 createStore
+    const extraEnhancers = plugin.get('extraEnhancers');
+    const enhancers = [...extraEnhancers, applyMiddleware(routerMiddleware(history), sagaMiddleware, ...extraMiddleware)];
+    // app._store = applyMiddleware(routerMiddleware(history), sagaMiddleware, ...extraMiddleware)(createStore)(rootReducer, opts.initialState);
+    app._store = createStore(rootReducer, opts.initialReducers, compose(...enhancers));
+
     // todo:stateChange
     const onStateChange = plugin.get('onStateChange');
     app._store.subscribe(() => {
