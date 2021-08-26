@@ -65,7 +65,7 @@ export default function dva(opts={}) {
     app._store.subscribe(() => {
       onStateChange.forEach(listener => listener(app._store.getState()));
     });
-    run(app);
+    run(app, plugin);
 
     sages.forEach(sagaMiddleware.run); // 启动saga执行
 
@@ -95,7 +95,7 @@ export default function dva(opts={}) {
         sagaMiddleware.run(getSaga(m.effects, m, plugin.get('onEffect')));
       }
       if(m.subscriptions) {
-        runSubscription(m.subscriptions, app)
+        runSubscription(m.subscriptions, app, plugin)
       }
     }
   }

@@ -34,7 +34,10 @@ const app = dva({
       store.persistor = persistor;
       return store;
     }
-  ]
+  ],
+  onError(e) {
+    console.log(`%c${e}`, 'color: #00ff00;')
+  }
 });
 
 // todo: 2. Plugins

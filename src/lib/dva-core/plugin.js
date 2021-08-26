@@ -5,7 +5,8 @@ const hooks = [
   'onStateChange',
   'onReducer',
   'extraEnhancers',
-  '_handleActions'
+  '_handleActions',
+  'onError'
 ]
 
 export default class Plugin {
