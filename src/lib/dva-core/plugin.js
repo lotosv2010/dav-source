@@ -4,7 +4,8 @@ const hooks = [
   'onAction',
   'onStateChange',
   'onReducer',
-  'extraEnhancers'
+  'extraEnhancers',
+  '_handleActions'
 ]
 
 export default class Plugin {
@@ -21,6 +22,8 @@ export default class Plugin {
     for (const key in plugin) {
       if (key === 'extraEnhancers') {
         hooks[key] = plugin[key];
+      } else if (key === '_handleActions') {
+        this._handleActions = plugin[key];
       } else {
         hooks[key].push(plugin[key]);
       }

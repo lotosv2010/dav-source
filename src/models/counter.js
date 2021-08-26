@@ -7,10 +7,12 @@ export default {
   },
   reducers: {
     add(state, action) {
-      return { ...state, number: state.number + 1, ...action.payload };
+      // return { ...state, number: state.number + 1, ...action.payload };
+      state.number += 1;
     },
     minus(state, action) {
-      return { ...state, number: state.number - 1, ...action.payload };
+      // return { ...state, number: state.number - 1, ...action.payload };
+      state.number -= 1;
     }
   },
   subscriptions: {

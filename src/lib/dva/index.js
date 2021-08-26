@@ -45,7 +45,7 @@ export default function dva(opts={}) {
   }
   function start(container) {
     for (const model of app._models) {
-      initialReducers[model.namespace] = getReducer(model);
+      initialReducers[model.namespace] = getReducer(model, plugin._handleActions);
     }
     const rootReducer = createReducer(); // 返回一个根的reducer
     const sages = getSagas(app, plugin);
@@ -88,7 +88,7 @@ export default function dva(opts={}) {
     app.model = injectModel.bind(app);
     function injectModel(m) {
       m = model(m); // 给 reducers effects 加命名空间前缀
-      initialReducers[m.namespace] = getReducer(m);
+      initialReducers[m.namespace] = getReducer(m, plugin._handleActions);
       // todo：replaceReducer 会默认派发动作，会让 reducer 执行
       app._store.replaceReducer(createReducer()); // 新的reducer替换新的reducer
       if(m.effects) {
@@ -100,15 +100,19 @@ export default function dva(opts={}) {
     }
   }
 
-  function getReducer(model) {
+  function getReducer(model, handleActions) {
     const {state: defaultState, reducers={}} = model;
-    return function(state=defaultState, action) {
+    const reducer = (state=defaultState, action) => {
       const reducer = reducers[action.type];
       if(reducer) {
         return reducer(state, action);
       }
       return state;
     }
+    if(handleActions) {
+      return handleActions(reducers, defaultState);
+    }
+    return reducer;
   }
 
   return app;

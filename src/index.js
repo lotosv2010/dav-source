@@ -6,6 +6,7 @@ import createLoading from './lib/dva-loading';
 import undoable from './lib/redux-undo';
 import {persistReducer, persistStore} from './lib/redux-persist';
 import storage from './lib/redux-persist/lib/storage';
+import immer from './lib/dva-immer';
 
 const persistConfig = {
   key: 'root',
@@ -43,6 +44,7 @@ app.use(createLoading());
 //     localStorage.setItem('state', JSON.stringify(state));
 //   }
 // })
+app.use(immer());
 
 // todo:  3. Model，注册模型 
 app.model(require('./models/counter').default);
