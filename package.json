@@ -7,10 +7,17 @@
     "precommit": "npm run lint"
   },
   "dependencies": {
+    "connected-react-router": "^6.9.1",
     "dva": "^2.4.1",
+    "dva-immer": "^1.0.0",
+    "dva-loading": "^3.0.22",
     "keymaster": "^1.6.2",
     "react": "^16.2.0",
-    "react-dom": "^16.2.0"
+    "react-dom": "^16.2.0",
+    "react-redux": "^6.0.1",
+    "redux-logger": "^3.0.6",
+    "redux-persist": "^6.0.0",
+    "redux-undo": "^1.0.1"
   },
   "devDependencies": {
     "babel-plugin-dva-hmr": "^0.3.2",

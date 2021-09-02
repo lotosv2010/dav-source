@@ -6,10 +6,12 @@ export default {
   },
   reducers: {
     setName(state, action) {
-      return { ...state, name: state.name + 1, ...action.payload };
+      // return { ...state, name: state.name + 1, ...action.payload };
+      state.name += 1;
     },
     setAge(state, action) {
-      return { ...state, age: state.age + 1, ...action.payload };
+      // return { ...state, age: state.age + 1, ...action.payload };
+      state.age += 1;
     }
   },
   subscriptions: {
